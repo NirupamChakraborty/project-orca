@@ -1,10 +1,11 @@
 import bcrypt from "bcryptjs";
+import crypto from "crypto";
 import httpStatus from "http-status";
 import UserModel from "../models/users.model";
 
 
 // register
-const registerController = async (req,res) =>{
+export const registerController = async (req,res) =>{
     const {name, username, password} = req.body;
 
     try {
@@ -29,3 +30,34 @@ const registerController = async (req,res) =>{
     }
 }
 
+export const loginController = async (req,res) =>{
+    const {username, password} = req.body;
+
+    if(!username || !password){
+        return res.status(httpStatus.BAD_REQUEST).json({message: "Please provide username and password"});
+    }
+    try {
+        const user = UserModel.find({username});
+        
+        if(!user){
+            return res.status(httpStatus.NOT_FOUND).json({message: "User not found"});
+        }
+        const isMatch = await bcrypt.compare(password, user.password);
+        if(isMatch){
+            // will do something here
+            let token = crypto.randomBytes(64).toString("hex");
+
+            user.token = token;
+            await user.save();
+
+            res.status(httpStatus.OK).json({message: "Login successful", token:token});
+        }
+        return res.status(httpStatus.UNAUTHORIZED).json({message: "Invalid credentials"});
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({message: "Server error"});
+        
+    }
+
+}
