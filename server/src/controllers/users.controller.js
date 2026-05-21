@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import httpStatus from "http-status";
-import UserModel from "../models/users.model";
+import UserModel from "../models/users.model.js";
 
 
 // register
@@ -10,12 +10,12 @@ export const registerController = async (req,res) =>{
 
     try {
         // check for existing user
-        const existingUser = UserModel.findOne({username});
+        const existingUser = await UserModel.findOne({username});
         if(existingUser){
             return res.status(httpStatus.FOUND).json({message: "User already exists"});
         }
         const hashedPassword = await bcrypt.hash(password, 10)
-        const newUser = new UserModel.create({
+        const newUser = await UserModel.create({
             name: name,
             username: username,
             password: hashedPassword
@@ -37,7 +37,7 @@ export const loginController = async (req,res) =>{
         return res.status(httpStatus.BAD_REQUEST).json({message: "Please provide username and password"});
     }
     try {
-        const user = UserModel.find({username});
+        const user = await UserModel.findOne({username});
         
         if(!user){
             return res.status(httpStatus.NOT_FOUND).json({message: "User not found"});

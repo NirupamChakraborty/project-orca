@@ -4,6 +4,7 @@ import express from "express";
 import http from "http";
 import { Server } from "socket.io";
 import { connectDB } from "./config/db.js";
+import userRoutes from "./routes/users.routes.js";
 
 dotenv.config();
 
@@ -13,6 +14,8 @@ const io = new Server(server);
 
 app.use(express.json());
 app.use(cors())
+
+app.use("/api/v1/users", userRoutes)
 
 app.get("/", (req, res) => {
     res.send("Hello World!");
