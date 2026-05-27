@@ -16,3 +16,4 @@ Tech Stack - MERN STACK and Computer Networks
 
 
 <img src="./Architecture.png">
+
