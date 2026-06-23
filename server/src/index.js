@@ -10,7 +10,15 @@ dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+const io = new Server(server,{
+    // to solve cors error on socket.io connection, engineering pov
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"],
+        allowedHeaders: ["*"],
+        credentials: true
+    }
+});
 
 app.use(express.json());
 app.use(cors())
