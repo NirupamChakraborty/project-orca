@@ -1,5 +1,4 @@
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { Snackbar } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -8,7 +7,8 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
+import toast from 'react-hot-toast';
 import { AuthContext } from '../contexts/AuthContext';
 
 
@@ -33,19 +33,20 @@ export default function Authentication() {
     const [open, setOpen] = useState(false)
 
 
-    const { handleRegister, handleLogin } = React.useContext(AuthContext);
+    const { handleRegister, handleLogin } = useContext(AuthContext);
 
-    let handleAuth = async () => {
+    let handleAuth = async () => { //handle auth from the form/context
         try {
-            if (formState === 0) {
+            if (formState === 0) { //login
 
                 let result = await handleLogin(username, password)
-
+                toast.success("Login successful");
 
             }
-            if (formState === 1) {
+            if (formState === 1) {   //signup
                 let result = await handleRegister(name, username, password);
                 console.log(result);
+                toast.success("Registration successful");
                 setUsername("");
                 setMessage(result);
                 setOpen(true);
@@ -58,6 +59,7 @@ export default function Authentication() {
             console.log(err);
             let message = (err.response.data.message);
             setError(message);
+            toast.error(message);
         }
     }
 
@@ -159,12 +161,14 @@ export default function Authentication() {
                 </Grid>
             </Grid>
 
-            <Snackbar
+            {/* <Snackbar
 
                 open={open}
                 autoHideDuration={4000}
                 message={message}
-            />
+                severity="success"
+                
+            /> */}
 
         </ThemeProvider>
     );
