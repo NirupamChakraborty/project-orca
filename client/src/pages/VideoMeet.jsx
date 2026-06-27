@@ -10,7 +10,7 @@ import { Badge, Button, IconButton, TextField } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import io from "socket.io-client";
 import server from "../environment.js";
-import "../pages/styles/videoComponent.module.css";
+import styles from "../pages/styles/videoComponent.module.css";
 
 const server_url = server;
 

@@ -43,17 +43,21 @@ export const loginController = async (req,res) =>{
             return res.status(httpStatus.NOT_FOUND).json({message: "User not found"});
         }
         const isMatch = await bcrypt.compare(password, user.password);
-        if(isMatch){
-            // will do something here
+        if (isMatch) {
             let token = crypto.randomBytes(64).toString("hex");
-
+        
             user.token = token;
             await user.save();
-
-            res.status(httpStatus.OK).json({message: "Login successful", token:token});
-        }
-        return res.status(httpStatus.UNAUTHORIZED).json({message: "Invalid credentials"});
         
+            return res.status(httpStatus.OK).json({
+                message: "Login successful",
+                token: token
+            });
+        }
+        
+        return res.status(httpStatus.UNAUTHORIZED).json({
+            message: "Invalid credentials"
+        });
     } catch (error) {
         console.log(error);
         res.status(500).json({message: "Server error"});
