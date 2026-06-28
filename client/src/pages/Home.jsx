@@ -1,9 +1,10 @@
 import React from 'react'
+// HOF 
 
-const Home = () => {
+const HomeComponent = () => {
   return (
     <div>Home</div>
   )
 }
 
-export default Home
+export default withAuth(HomeComponent)
